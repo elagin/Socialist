@@ -11,7 +11,7 @@ public class GetUserInfo extends VKHTTPClient{
     public GetUserInfo(Context context, String access_token) {
         this.context = context;
         post = new HashMap<>();
-        post.put("method", "users.get ");
+        post.put("method", "users.get");
         post.put("access_token", access_token);
     }
 }

@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
+import pasha.elagin.socialist.DataSource.Vk.VKNewsfeedItem;
 import pasha.elagin.socialist.network.Vk.GetUserInfo;
 import pasha.elagin.socialist.network.Vk.NewsfeedGet;
 import pasha.elagin.socialist.network.Vk.RequestErrors;
@@ -103,12 +105,17 @@ public class MyIntentService extends IntentService {
                     returnError(newsfeedGetVK, action);
                 } else {
                     try {
-                        JSONArray resArr = (JSONArray) newsfeedGetVK.get("response");
-//                        JSONObject resp = (JSONObject) resArr.get(0);
-//                        final String userName = resp.getString("first_name") + " " + resp.getString("last_name");
-//                        PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-//                        JSONObject userInfoJ = new JSONObject().put("userName", userName).put("versionName", pInfo.versionName);
-//                        mBroadcaster.broadcastIntentWithState(action, RESULT_SUCCSESS, userInfoJ.toString());
+                        //JSONArray resArr = (JSONArray) newsfeedGetVK.get("response");
+                        JSONObject res = newsfeedGetVK.getJSONObject("response");
+                        JSONArray items = res.getJSONArray("items");
+
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject item = (JSONObject) items.get(i);
+                            String dateStr = item.getString("date");
+                            Date date = new Date(Integer.decode(dateStr) * 1000);
+                            VKNewsfeedItem feedItem = new VKNewsfeedItem(date, item.getString("text"));
+                            myApp.addNewsfeedItemList(feedItem);
+                        }
                         mBroadcaster.broadcastIntentWithState(action, RESULT_SUCCSESS, "OK");
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -12,10 +12,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewTreeObserver;
+import android.view.View;
 import android.widget.Toast;
 
 import com.vk.sdk.VKAccessToken;
@@ -182,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
+                        break;
+                    case MyIntentService.ACTION_NEWSFEED_GET_VK:
+
                         break;
                     default:
                         break;
