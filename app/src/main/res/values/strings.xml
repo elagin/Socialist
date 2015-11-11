@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Socialist</string>
+    <string name="action_settings">Settings</string>
+    <string name="ActionNewsfeedGetVKRequest">ActionNewsfeedGetVKRequest</string>
+</resources>
