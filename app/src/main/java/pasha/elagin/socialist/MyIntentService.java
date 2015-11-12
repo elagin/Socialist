@@ -33,7 +33,8 @@ public class MyIntentService extends IntentService {
     public static final String ACTION_VK_GROUPS_GET_BY_ID = ACTION_PREFIX + "VKGroupsGetByIdRequest";
 
     private static final String ACCESS_TOKEN_VK = "access_token";
-    private static final String GROUP_IDS = "group_ids";
+    private static final String GROUP_IDS_VK = "group_ids";
+    private static final String START_FROM_VK = "start_from";
 
     public static final String RESULT_CODE = "result_code";
 
@@ -64,16 +65,16 @@ public class MyIntentService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startActionNewsfeedGetVKRequest(Context context, String token) {
+    public static void startActionNewsfeedGetVKRequest(Context context, String token, String startFrom) {
         Intent intent = newIntent(context, ACTION_NEWSFEED_GET_VK);
         intent.putExtra(ACCESS_TOKEN_VK, token);
+        intent.putExtra(START_FROM_VK, startFrom);
         context.startService(intent);
     }
 
     public static void startActionVKGroupsGetByIdRequest(Context context, String token, String groupIds) {
         Intent intent = newIntent(context, ACTION_VK_GROUPS_GET_BY_ID);
         intent.putExtra(ACCESS_TOKEN_VK, token);
-        intent.putExtra(GROUP_IDS, groupIds);
         context.startService(intent);
     }
 
@@ -144,9 +145,6 @@ public class MyIntentService extends IntentService {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         mBroadcaster.broadcastIntentWithState(action, RESULT_ERROR, e.getLocalizedMessage());
-//                    } catch (PackageManager.NameNotFoundException pme) {
-//                        pme.printStackTrace();
-//                        mBroadcaster.broadcastIntentWithState(action, RESULT_ERROR, pme.getLocalizedMessage());
                     }
                 }
                 break;
@@ -189,19 +187,20 @@ public class MyIntentService extends IntentService {
     }
 
     private JSONObject handleNewsfeedGetVKRequest(Intent intent) {
-        final String access_token = intent.getStringExtra(ACCESS_TOKEN_VK);
-        return new NewsfeedGet(this, access_token).request();
+        final String accessToken = intent.getStringExtra(ACCESS_TOKEN_VK);
+        final String startFrom = intent.getStringExtra(START_FROM_VK);
+        return new NewsfeedGet(this, accessToken, startFrom).request();
     }
 
     private JSONObject handleVKGroupsGetByIdRequest(Intent intent) {
         final String access_token = intent.getStringExtra(ACCESS_TOKEN_VK);
-        final String groupIds = intent.getStringExtra(GROUP_IDS);
+        final String groupIds = intent.getStringExtra(GROUP_IDS_VK);
         return new VKGroupsGetById(this, access_token, groupIds).request();
     }
 
     private void returnError(JSONObject response, String action) {
-        //{"error":{"error_code":5,"error_msg":"User authorization failed: no access_token passed.","request_params":[{"value":"1","key":"oauth"},{"value":"newsfeed.get","key":"method"},{"value":"post","key":"filters"}]}}
         Log.e(getClass().toString(), response.toString());
+        System.out.print(response.toString());
         mBroadcaster.broadcastIntentWithState(action, RESULT_ERROR, RequestErrors.getError(response));
     }
 

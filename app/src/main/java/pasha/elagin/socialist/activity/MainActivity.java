@@ -104,10 +104,6 @@ public class MainActivity extends AppCompatActivity {
         MyIntentService.startActionGetUserInfoVKRequest(this, myApp.getPreferences().getVkToken());
     }
 
-    private void NewsfeedGetVKRequest() {
-        MyIntentService.startActionNewsfeedGetVKRequest(this, myApp.getPreferences().getVkToken());
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -124,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_newsfeed_get_vk_requestequest) {
-            MyIntentService.startActionNewsfeedGetVKRequest(context, myApp.getPreferences().getVkToken());
+            MyIntentService.startActionNewsfeedGetVKRequest(context, myApp.getPreferences().getVkToken(), myApp.getPreferences().getVKFeedStartFrom());
             return true;
         }
 
@@ -239,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         VKUIHelper.onResume(this);
         if (VKSdk.wakeUpSession()) {
-            MyIntentService.startActionNewsfeedGetVKRequest(context, myApp.getPreferences().getVkToken());
+            MyIntentService.startActionNewsfeedGetVKRequest(context, myApp.getPreferences().getVkToken(), myApp.getPreferences().getVKFeedStartFrom());
         } else {
             VKSdk.authorize(sMyScope, true, true);
         }

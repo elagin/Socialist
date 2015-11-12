@@ -13,9 +13,8 @@ public class MyPreferences {
     private static SharedPreferences preferences;
     private static Context context;
 
-    private String VKFeedStartFrom;
-
-    private String VKFeedNewOffset;
+    private String VKFeedStartFrom = "";
+    private String VKFeedNewOffset = "";
 
     public MyPreferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
