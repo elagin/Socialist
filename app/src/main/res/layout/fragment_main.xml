@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,21 +9,11 @@
     tools:context=".MainActivityFragment"
     tools:showIn="@layout/activity_main">
 
-    <ScrollView
-        android:id="@+id/messages_scroll"
-        android:layout_width="fill_parent"
+    <ListView
+        android:id="@+id/messages_table"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:tag="mc_det_messages_content"
-        android:background="#64ffbc00">
+        android:shrinkColumns="1"
+        android:stretchColumns="1" />
 
-        <TableLayout
-            android:id="@+id/messages_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:shrinkColumns="1"
-            android:stretchColumns="1" />
-
-    </ScrollView>
-
-</RelativeLayout>
+</LinearLayout>

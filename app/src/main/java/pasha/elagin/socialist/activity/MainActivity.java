@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vk.sdk.VKAccessToken;
@@ -28,7 +29,13 @@ import com.vk.sdk.dialogs.VKCaptchaDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+
 import pasha.elagin.socialist.Const;
+import pasha.elagin.socialist.DataSource.Vk.VKNewsfeedAdapter;
+import pasha.elagin.socialist.DataSource.Vk.VKNewsfeedItem;
 import pasha.elagin.socialist.MyApp;
 import pasha.elagin.socialist.MyIntentService;
 import pasha.elagin.socialist.R;
@@ -36,9 +43,12 @@ import pasha.elagin.socialist.R;
 public class MainActivity extends AppCompatActivity {
 
     private static final String sTokenKey = "VK_ACCESS_TOKEN_FULL";
-    private static final String[] sMyScope = new String[]{VKScope.WALL,VKScope.FRIENDS};
+    private static final String[] sMyScope = new String[]{VKScope.WALL, VKScope.FRIENDS};
     private final String appID = "5143648";
     private static final String CLASS_TAG = "MainActivity";
+
+    ArrayList<VKNewsfeedItem> products = new ArrayList<>();
+    VKNewsfeedAdapter boxAdapter;
 
     private MyApp myApp = null;
     private Context context;
@@ -50,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
         myApp = (MyApp) getApplicationContext();
         context = getApplicationContext();
         setContentView(R.layout.activity_main);
+
+        // создаем адаптер
+
+        boxAdapter = new VKNewsfeedAdapter(this, products);
+        fillData();
+
+        // настраиваем список
+        ListView lvMain = (ListView) findViewById(R.id.messages_table);
+        lvMain.setAdapter(boxAdapter);
 
         // The filter's action is BROADCAST_ACTION
         IntentFilter statusIntentFilter = new IntentFilter(Const.BROADCAST_ACTION);
@@ -182,9 +201,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         break;
-                    case MyIntentService.ACTION_NEWSFEED_GET_VK:
 
+                    case MyIntentService.ACTION_NEWSFEED_GET_VK:
+                        getGroupsName(context, myApp.getPreferences().getVkToken());
                         break;
+
+                    case MyIntentService.ACTION_VK_GROUPS_GET_BY_ID:
+                        fillData();
+                        break;
+
                     default:
                         break;
                 }
@@ -195,6 +220,20 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, "В onReceiveResult пришло не понятно что.", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void getGroupsName(Context context, String token) {
+        StringBuilder groupIds = new StringBuilder();
+        for (Iterator<VKNewsfeedItem> i = myApp.getNewsfeedItemList().iterator(); i.hasNext(); ) {
+            VKNewsfeedItem item = i.next();
+            if (groupIds.length() > 0)
+                groupIds.append(",");
+            String sourceID = item.getSourceID();
+            if (sourceID.contains("-"))
+                groupIds.append(sourceID.replace("-", ""));
+        }
+        if (groupIds.length() > 0)
+            MyIntentService.startActionVKGroupsGetByIdRequest(context, token, groupIds.toString());
     }
 
     @Override
@@ -212,5 +251,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             VKSdk.authorize(sMyScope, true, true);
         }
+    }
+
+    // генерируем данные для адаптера
+    void fillData() {
+//            products.add(new VKNewsfeedItem(new Date(), "AA"));
+        for (int i = 0; i < myApp.getNewsfeedItemList().size(); i++) {
+            VKNewsfeedItem item = myApp.getNewsfeedItemList().get(i);
+            products.add(item);
+        }
+        boxAdapter.notifyDataSetInvalidated();
     }
 }

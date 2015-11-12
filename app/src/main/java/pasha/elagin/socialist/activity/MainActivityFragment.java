@@ -16,7 +16,7 @@ import pasha.elagin.socialist.R;
  */
 public class MainActivityFragment extends Fragment {
 
-    private View messagesTable;
+//    private View messagesTable;
     private MyApp myApp;
 
     public MainActivityFragment() {
@@ -25,22 +25,22 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_main, container, false);
-        messagesTable = viewMain.findViewById(R.id.messages_table);
+  //      messagesTable = viewMain.findViewById(R.id.messages_table);
 
         myApp = (MyApp) getActivity().getApplicationContext();
-        update();
+    ///    update();
         return viewMain;
 
     }
 
     public void update() {
-        ViewGroup messageView = (ViewGroup) messagesTable;
-        final TableLayout messagesTableLayout = (TableLayout) messagesTable;
-
-        messageView.removeAllViews();
-        for (int i = 0; i < myApp.getNewsfeedItemList().size(); i++) {
-            VKNewsfeedItem item = myApp.getNewsfeedItemList().get(i);
-            item.inflateRow(getActivity(), messageView);
-        }
+//        ViewGroup messageView = (ViewGroup) messagesTable;
+//        final TableLayout messagesTableLayout = (TableLayout) messagesTable;
+//
+//        messageView.removeAllViews();
+//        for (int i = 0; i < myApp.getNewsfeedItemList().size(); i++) {
+//            VKNewsfeedItem item = myApp.getNewsfeedItemList().get(i);
+//            item.inflateRow(getActivity(), messageView);
+//        }
     }
 }

@@ -15,7 +15,6 @@ public class NewsfeedGet extends VKHTTPClient {
         post.put("method", "newsfeed.get");
         post.put("access_token", access_token);
         post.put("filters", "post");
-        post.put("count", "3");
-
+        post.put("count", "8");
     }
 }
