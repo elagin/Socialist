@@ -40,18 +40,7 @@ public class MyIntentService extends IntentService {
 
     public final static int RESULT_SUCCSESS = 0;
     public final static int RESULT_ERROR = 1;
-
-    private static final String USER_ID = "userID";
-    private static final String USER_NAME = "userName";
-    private static final String VERSION_NAME = "versionName";
-    private static final String ACCESS_TOKEN = "access_token";
-    private static final String GROUP_ID = "group_id";
-
-    private static final String POINT = "point";
-    private static final String MEMBER_GROUP = "memberGroup";
-
     public static final String RESULT = "RESULT";
-
 
     private final BroadcastNotifier mBroadcaster = new BroadcastNotifier(this);
 
@@ -92,6 +81,7 @@ public class MyIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         final String action = intent.getAction();
+        Log.d(getClass().toString(), action);
         switch (action) {
             case ACTION_GET_USER_INFO_VK:
                 JSONObject userInfo = handleGetUserInfoVKRequest(intent);
@@ -128,7 +118,9 @@ public class MyIntentService extends IntentService {
                             JSONObject item = (JSONObject) items.get(i);
                             String dateStr = item.getString("date");
                             String source_id = item.getString("source_id");
-                            Date date = new Date(Integer.decode(dateStr) * 1000);
+                            long dateLong = Long.decode(dateStr) * 1000;
+                            Date date = new Date(dateLong);
+
 //                            JSONArray attachments = item.getJSONArray("attachments");
 //                            if(attachments != null) {
 //                                JSONObject att = (JSONObject) attachments.get(0);

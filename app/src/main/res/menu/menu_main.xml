@@ -5,6 +5,6 @@
     <item
         android:id="@+id/action_newsfeed_get_vk_requestequest"
         android:orderInCategory="100"
-        android:title="@string/ActionNewsfeedGetVKRequest"
+        android:title="@string/action_update"
         app:showAsAction="never" />
 </menu>
