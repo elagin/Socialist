@@ -1,15 +1,6 @@
 package pasha.elagin.socialist.DataSource.Vk;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.TableRow;
-import android.widget.TextView;
-
 import java.util.Date;
-
-import pasha.elagin.socialist.MyUtils;
-import pasha.elagin.socialist.R;
 
 /**
  * Created by elagin on 11.11.15.
@@ -20,6 +11,8 @@ public class VKNewsfeedItem {
     private String text;
     private String source_id;
     private String sourceName;
+
+    private String sourceAvatar;
 
     public VKNewsfeedItem(Date date, String text, String source_id) {
         this.date = date;
@@ -46,4 +39,13 @@ public class VKNewsfeedItem {
     public String getSourceName() {
         return sourceName;
     }
+
+    public String getSourceAvatar() {
+        return sourceAvatar;
+    }
+
+    public void setSourceAvatar(String sourceAvatar) {
+        this.sourceAvatar = sourceAvatar;
+    }
+
 }

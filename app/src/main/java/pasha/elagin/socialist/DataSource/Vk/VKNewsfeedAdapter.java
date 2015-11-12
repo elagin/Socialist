@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,7 +81,9 @@ public class VKNewsfeedAdapter extends BaseAdapter {
         if (p.getSourceName() != null)
             ((TextView) view.findViewById(R.id.text_source)).setText(p.getSourceName());
 
-        //((ImageView) view.findViewById(R.id.imageView)).setImageResource(p.image);
+
+        ImageView imageView = ((ImageView) view.findViewById(R.id.imageView));
+        Picasso.with(ctx).load(p.getSourceAvatar()).into(imageView);
 //
 //        CheckBox cbBuy = (CheckBox) view.findViewById(R.id.cbBox);
 //        // присваиваем чекбоксу обработчик

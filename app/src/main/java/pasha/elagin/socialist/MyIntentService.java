@@ -12,8 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import pasha.elagin.socialist.DataSource.Vk.VKGroup;
 import pasha.elagin.socialist.DataSource.Vk.VKNewsfeedItem;
@@ -156,8 +154,10 @@ public class MyIntentService extends IntentService {
 
                             for (int j = 0; j < myApp.getNewsfeedItemList().size(); j++) {
                                 VKNewsfeedItem feedItem = myApp.getNewsfeedItemList().get(j);
-                                if (feedItem.getSourceID().equals("-" + id))
+                                if (feedItem.getSourceID().equals("-" + id)) {
                                     feedItem.setSourceName(name);
+                                    feedItem.setSourceAvatar(photo50);
+                                }
                             }
                         }
                         mBroadcaster.broadcastIntentWithState(action, RESULT_SUCCSESS, "OK");
