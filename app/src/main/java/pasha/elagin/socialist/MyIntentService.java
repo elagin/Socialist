@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import pasha.elagin.socialist.DataSource.Vk.Store;
 import pasha.elagin.socialist.DataSource.Vk.VKGroup;
 import pasha.elagin.socialist.DataSource.Vk.VKNewsfeedItem;
 import pasha.elagin.socialist.network.Vk.GetUserInfo;
@@ -111,19 +112,32 @@ public class MyIntentService extends IntentService {
                     try {
                         JSONObject res = newsfeedGetVK.getJSONObject("response");
                         JSONArray items = res.getJSONArray("items");
+                        myApp.getPreferences().setVKFeedStartFrom(res.getString("new_from"));
+                        myApp.getPreferences().setVKFeedNewOffset(res.getString("new_offset"));
+
+                        parseVKGroups(res.getJSONArray("groups"));
 
                         for (int i = 0; i < items.length(); i++) {
                             JSONObject item = (JSONObject) items.get(i);
                             String dateStr = item.getString("date");
-                            String source_id = item.getString("source_id");
+                            String sourceID = item.getString("source_id");
+                            String sourseName = "";
+                            String sourseAvatar = "";
                             long dateLong = Long.decode(dateStr) * 1000;
                             Date date = new Date(dateLong);
 
-//                            JSONArray attachments = item.getJSONArray("attachments");
-//                            if(attachments != null) {
-//                                JSONObject att = (JSONObject) attachments.get(0);
-//                            }
-                            VKNewsfeedItem feedItem = new VKNewsfeedItem(date, item.getString("text"), source_id);
+                            if (sourceID.startsWith("-")) {
+                                String srcID = sourceID.substring(1, sourceID.length());
+                                for (int j = 0; j < Store.getGroups().size(); j++) {
+                                    VKGroup group = Store.getGroups().get(j);
+                                    if (group.getId().equals(srcID)) {
+                                        sourseName = group.getName();
+                                        sourseAvatar = group.getPhoto50();
+                                        break;
+                                    }
+                                }
+                            }
+                            VKNewsfeedItem feedItem = new VKNewsfeedItem(date, item.getString("text"), sourceID, sourseName, sourseAvatar);
                             myApp.addNewsfeedItemList(feedItem);
                         }
                         mBroadcaster.broadcastIntentWithState(action, RESULT_SUCCSESS, "OK");
@@ -147,18 +161,10 @@ public class MyIntentService extends IntentService {
                         for (int i = 0; i < res.length(); i++) {
                             JSONObject item = (JSONObject) res.get(i);
 
-                            String id = item.getString("gid");
-                            String name = item.getString("name");
-                            String photo50 = item.getString("photo");
-                            VKGroup group = new VKGroup(id, name, photo50);
+                            VKGroup group = new VKGroup(item.getString("gid"), item.getString("name"), item.getString("photo"));
+                            Store.getGroups().add(group);
 
-                            for (int j = 0; j < myApp.getNewsfeedItemList().size(); j++) {
-                                VKNewsfeedItem feedItem = myApp.getNewsfeedItemList().get(j);
-                                if (feedItem.getSourceID().equals("-" + id)) {
-                                    feedItem.setSourceName(name);
-                                    feedItem.setSourceAvatar(photo50);
-                                }
-                            }
+
                         }
                         mBroadcaster.broadcastIntentWithState(action, RESULT_SUCCSESS, "OK");
                     } catch (JSONException e) {
@@ -197,5 +203,18 @@ public class MyIntentService extends IntentService {
         //{"error":{"error_code":5,"error_msg":"User authorization failed: no access_token passed.","request_params":[{"value":"1","key":"oauth"},{"value":"newsfeed.get","key":"method"},{"value":"post","key":"filters"}]}}
         Log.e(getClass().toString(), response.toString());
         mBroadcaster.broadcastIntentWithState(action, RESULT_ERROR, RequestErrors.getError(response));
+    }
+
+    private void parseVKGroups(JSONArray groups) {
+        for (int i = 0; i < groups.length(); i++) {
+            JSONObject group = null;
+            try {
+                group = (JSONObject) groups.get(i);
+                VKGroup VKgroup = new VKGroup(group.getString("gid"), group.getString("name"), group.getString("photo"));
+                Store.getGroups().add(VKgroup);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

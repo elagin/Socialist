@@ -30,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 import pasha.elagin.socialist.Const;
@@ -193,8 +192,6 @@ public class MainActivity extends AppCompatActivity {
                         if (userInfo != null) {
                             try {
                                 JSONObject res = new JSONObject(userInfo);
-                                String userName = res.getString("userName");
-                                String versionName = res.getString("versionName");
                                 MyIntentService.startActionGetUserInfoVKRequest(context, myApp.getPreferences().getVkToken());
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -203,12 +200,13 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case MyIntentService.ACTION_NEWSFEED_GET_VK:
-                        getGroupsName(context, myApp.getPreferences().getVkToken());
-                        break;
-
-                    case MyIntentService.ACTION_VK_GROUPS_GET_BY_ID:
+//                        getGroupsName(context, myApp.getPreferences().getVkToken());
                         fillData();
                         break;
+
+//                    case MyIntentService.ACTION_VK_GROUPS_GET_BY_ID:
+//                        fillData();
+//                        break;
 
                     default:
                         break;
@@ -240,14 +238,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         VKUIHelper.onResume(this);
-
-//        VKSdk.authorize(sMyScope, true, true);
-
         if (VKSdk.wakeUpSession()) {
-//            //myApp.getSession().collectData();
             MyIntentService.startActionNewsfeedGetVKRequest(context, myApp.getPreferences().getVkToken());
-//            //MyIntentService.startActionGetUserInfoVKRequest(context, myApp.getPreferences().getVkToken());
-//            //MyIntentService.startActionIsOpenMemberVKRequest(this, myApp.getPreferences().getVkToken());
         } else {
             VKSdk.authorize(sMyScope, true, true);
         }
@@ -255,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
     // генерируем данные для адаптера
     void fillData() {
-//            products.add(new VKNewsfeedItem(new Date(), "AA"));
         for (int i = 0; i < myApp.getNewsfeedItemList().size(); i++) {
             VKNewsfeedItem item = myApp.getNewsfeedItemList().get(i);
             products.add(item);

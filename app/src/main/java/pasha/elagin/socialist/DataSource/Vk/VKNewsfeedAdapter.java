@@ -83,7 +83,9 @@ public class VKNewsfeedAdapter extends BaseAdapter {
 
 
         ImageView imageView = ((ImageView) view.findViewById(R.id.imageView));
-        Picasso.with(ctx).load(p.getSourceAvatar()).into(imageView);
+        String sourceAvatar = p.getSourceAvatar();
+        if (!sourceAvatar.isEmpty())
+            Picasso.with(ctx).load(sourceAvatar).into(imageView);
 //
 //        CheckBox cbBuy = (CheckBox) view.findViewById(R.id.cbBox);
 //        // присваиваем чекбоксу обработчик

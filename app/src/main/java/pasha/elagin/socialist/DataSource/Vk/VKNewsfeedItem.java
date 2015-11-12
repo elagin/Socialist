@@ -9,15 +9,16 @@ public class VKNewsfeedItem {
 
     private Date date;
     private String text;
-    private String source_id;
+    private String sourceID;
     private String sourceName;
-
     private String sourceAvatar;
 
-    public VKNewsfeedItem(Date date, String text, String source_id) {
+    public VKNewsfeedItem(Date date, String text, String sourceID, String sourceName, String sourceAvatar) {
         this.date = date;
         this.text = text;
-        this.source_id = source_id;
+        this.sourceID = sourceID;
+        this.sourceName = sourceName;
+        this.sourceAvatar = sourceAvatar;
     }
 
     public void setSourceName(String sourceName) {
@@ -33,7 +34,7 @@ public class VKNewsfeedItem {
     }
 
     public String getSourceID() {
-        return source_id;
+        return sourceID;
     }
 
     public String getSourceName() {

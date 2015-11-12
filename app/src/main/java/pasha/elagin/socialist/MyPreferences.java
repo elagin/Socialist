@@ -13,6 +13,10 @@ public class MyPreferences {
     private static SharedPreferences preferences;
     private static Context context;
 
+    private String VKFeedStartFrom;
+
+    private String VKFeedNewOffset;
+
     public MyPreferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         MyPreferences.context = context;
@@ -25,4 +29,21 @@ public class MyPreferences {
     public void setVkToken(String value) {
         preferences.edit().putString(VK_TOKEN_KEY, value).commit();
     }
+
+    public String getVKFeedStartFrom() {
+        return VKFeedStartFrom;
+    }
+
+    public void setVKFeedStartFrom(String VKFeedStartFrom) {
+        this.VKFeedStartFrom = VKFeedStartFrom;
+    }
+
+    public String getVKFeedNewOffset() {
+        return VKFeedNewOffset;
+    }
+
+    public void setVKFeedNewOffset(String VKFeedNewOffset) {
+        this.VKFeedNewOffset = VKFeedNewOffset;
+    }
+
 }
